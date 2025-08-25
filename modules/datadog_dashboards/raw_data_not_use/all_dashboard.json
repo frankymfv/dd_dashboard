@@ -1,0 +1,234 @@
+{
+    "title": "[FrankyTesting] Main Dashboard",
+    "description": "FrankyTesting dashboard with configurable groups",
+    "widgets": [
+        {
+            "id": 8133987466585672,
+            "definition": {
+                "title": "[FrankyTesting] System Load & Disk",
+                "show_title": true,
+                "type": "group",
+                "layout_type": "ordered",
+                "widgets": [
+                    {
+                        "id": 6143807465813578,
+                        "definition": {
+                            "title": "[System] Load by Host",
+                            "show_legend": false,
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "on_right_yaxis": false,
+                                    "response_format": "timeseries",
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:system.load.1{*} by {host}"
+                                        }
+                                    ],
+                                    "display_type": "line"
+                                }
+                            ]
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 6,
+                            "height": 3
+                        }
+                    },
+                    {
+                        "id": 7909243107337783,
+                        "definition": {
+                            "title": "[System] Disk Usage by Host and Device",
+                            "show_legend": false,
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "on_right_yaxis": false,
+                                    "response_format": "timeseries",
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:system.disk.used{*} by {host,device}"
+                                        }
+                                    ],
+                                    "display_type": "line"
+                                }
+                            ]
+                        },
+                        "layout": {
+                            "x": 6,
+                            "y": 0,
+                            "width": 6,
+                            "height": 3
+                        }
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 12,
+                "height": 4
+            }
+        },
+        {
+            "id": 7341052724219449,
+            "definition": {
+                "title": "[Custom][FrankyTesting] Business Metrics",
+                "show_title": true,
+                "type": "group",
+                "layout_type": "ordered",
+                "widgets": [
+                    {
+                        "id": 8613218183599705,
+                        "definition": {
+                            "title": "[Custom][FrankyTesting] Transaction Volume by Service",
+                            "show_legend": false,
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "on_right_yaxis": false,
+                                    "response_format": "timeseries",
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:app.franky.transactions{*} by {service}"
+                                        }
+                                    ],
+                                    "display_type": "line"
+                                }
+                            ]
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 6,
+                            "height": 3
+                        }
+                    },
+                    {
+                        "id": 3010613200870621,
+                        "definition": {
+                            "title": "[Custom][FrankyTesting] Revenue by Service",
+                            "show_legend": false,
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "on_right_yaxis": false,
+                                    "response_format": "timeseries",
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:app.franky.revenue{*} by {service}"
+                                        }
+                                    ],
+                                    "display_type": "line"
+                                }
+                            ]
+                        },
+                        "layout": {
+                            "x": 6,
+                            "y": 0,
+                            "width": 6,
+                            "height": 3
+                        }
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 4,
+                "width": 12,
+                "height": 4
+            }
+        },
+        {
+            "id": 4355537895759636,
+            "definition": {
+                "title": "[FrankyTesting] Application Requests",
+                "show_legend": false,
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "on_right_yaxis": false,
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:app.franky.requests{*} by {service}"
+                            }
+                        ],
+                        "display_type": "line"
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 6,
+                "height": 6
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "env",
+            "prefix": "env",
+            "available_values": [],
+            "default": "prod"
+        },
+        {
+            "name": "team",
+            "prefix": "team",
+            "available_values": [],
+            "default": "asset-accounting"
+        },
+        {
+            "name": "namespace",
+            "prefix": "namespace",
+            "available_values": [],
+            "default": "prod-asset-accounting"
+        },
+        {
+            "name": "service",
+            "prefix": "service",
+            "available_values": [],
+            "default": "asset-accounting-backend"
+        },
+        {
+            "name": "account",
+            "prefix": "aws_account",
+            "available_values": [],
+            "default": "*"
+        },
+        {
+            "name": "region",
+            "prefix": "region",
+            "available_values": [],
+            "default": "*"
+        },
+        {
+            "name": "dbinstance",
+            "prefix": "dbinstanceidentifier",
+            "available_values": [],
+            "default": "prod-asset-accounting-20241109-01-0"
+        },
+        {
+            "name": "dbcluster",
+            "prefix": "dbclusteridentifier",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "ordered",
+    "notify_list": [],
+    "reflow_type": "fixed",
+    "tags": []
+}

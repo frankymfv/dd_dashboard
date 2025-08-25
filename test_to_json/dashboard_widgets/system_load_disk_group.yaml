@@ -1,0 +1,40 @@
+title: "[FrankyTesting] System Load & Disk"
+show_title: true
+type: "group"
+layout_type: "ordered"
+widgets:
+  - definition:
+      title: "[System] Load by Host"
+      show_legend: false
+      type: "timeseries"
+      requests:
+        - on_right_yaxis: false
+          response_format: "timeseries"
+          queries:
+            - data_source: "metrics"
+              name: "query1"
+              query: "sum:system.load.1{*} by {host}"
+          display_type: "line"
+    layout:
+      x: 0
+      "y": 0
+      width: 6
+      height: 3
+  
+  - definition:
+      title: "[System] Disk Usage by Host and Device"
+      show_legend: false
+      type: "timeseries"
+      requests:
+        - on_right_yaxis: false
+          response_format: "timeseries"
+          queries:
+            - data_source: "metrics"
+              name: "query1"
+              query: "sum:system.disk.used{*} by {host,device}"
+          display_type: "line"
+    layout:
+      x: 6
+      "y": 0
+      width: 6
+      height: 3

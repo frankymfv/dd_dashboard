@@ -1,0 +1,40 @@
+title: "[Custom][FrankyTesting] Business Metrics"
+show_title: true
+type: "group"
+layout_type: "ordered"
+widgets:
+  - definition:
+      title: "[Custom][FrankyTesting] Transaction Volume by Service"
+      show_legend: false
+      type: "timeseries"
+      requests:
+        - on_right_yaxis: false
+          response_format: "timeseries"
+          queries:
+            - data_source: "metrics"
+              name: "query1"
+              query: "sum:app.franky.transactions{*} by {service}"
+          display_type: "line"
+    layout:
+      x: 0
+      "y": 0
+      width: 6
+      height: 3
+  
+  - definition:
+      title: "[Custom][FrankyTesting] Revenue by Service"
+      show_legend: false
+      type: "timeseries"
+      requests:
+        - on_right_yaxis: false
+          response_format: "timeseries"
+          queries:
+            - data_source: "metrics"
+              name: "query1"
+              query: "avg:app.franky.revenue{*} by {service}"
+          display_type: "line"
+    layout:
+      x: 6
+      "y": 0
+      width: 6
+      height: 3
