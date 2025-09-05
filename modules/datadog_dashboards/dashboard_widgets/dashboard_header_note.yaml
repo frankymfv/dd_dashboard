@@ -2,7 +2,7 @@ id: 3376420991401685
 definition:
   type: "note"
   content: |
-    ![alt text](https://dlaudio.fineshare.net/cover/song-ai/covers/mackenzie-border-collie.webp)
+    ![alt text](${dashboard_image_url})
 
     # 📊 System Monitoring Dashboard
 
@@ -20,7 +20,7 @@ definition:
     
     **Guidelines:**
     - ✅ Check this dashboard first for any alerts or anomalies.
-    - 📞 Contact: #your_slack_team on Slack.
+    - 📞 Contact: #${slack_team} on Slack.
   
 
   background_color: "white"

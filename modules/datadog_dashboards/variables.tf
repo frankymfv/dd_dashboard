@@ -4,6 +4,30 @@ variable "add_prefix" {
   default     = ""
 }
 
+variable "dashboard_image_url" {
+  description = "URL for the dashboard header image"
+  type        = string
+  default     = "https://dlaudio.fineshare.net/cover/song-ai/covers/mackenzie-border-collie.webp"
+}
+
+variable "slack_team" {
+  description = "Slack team name for contact information"
+  type        = string
+  default     = "your_slack_team"
+}
+
+variable "slo_ids" {
+  description = "SLO IDs for dashboard widgets"
+  type = object({
+    request_latency = string
+    availability_api = string
+  })
+  default = {
+    request_latency = "55851b7bf8d15e6597a0b55aa15ceadc"
+    availability_api = "b8c13e6ff68e500eb487c3aac7eaaa8a"
+  }
+}
+
 # Template variables for dashboard filtering
 variable "template_variables" {
   description = "Template variables configuration for dashboard filtering"

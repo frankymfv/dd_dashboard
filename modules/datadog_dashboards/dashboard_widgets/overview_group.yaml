@@ -11,7 +11,7 @@ definition:
         title_size: "16"
         title_align: "left"
         type: "slo"
-        slo_id: "55851b7bf8d15e6597a0b55aa15ceadc"
+        slo_id: "${slo_ids.request_latency}"
         view_type: "detail"
         view_mode: "overall"
         time_windows:
@@ -31,7 +31,7 @@ definition:
         title_size: "16"
         title_align: "left"
         type: "slo"
-        slo_id: "b8c13e6ff68e500eb487c3aac7eaaa8a"
+        slo_id: "${slo_ids.availability_api}"
         view_type: "detail"
         view_mode: "overall"
         time_windows:

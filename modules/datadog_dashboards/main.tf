@@ -55,10 +55,16 @@ locals {
     "s3_group" = var.enabled_widgets.s3_group
   }
   
-  # Parse widget files
+  # Parse widget files with template substitution
   widgets = {
     for f in local.widget_files :
-    replace(basename(f), ".yaml", "") => yamldecode(file("${local.widgets_path}/${f}"))
+    replace(basename(f), ".yaml", "") => yamldecode(
+      templatefile("${local.widgets_path}/${f}", {
+        dashboard_image_url = var.dashboard_image_url
+        slack_team          = var.slack_team
+        slo_ids             = var.slo_ids
+      })
+    )
   }
   
   # Build complete dashboards by merging filtered dashboard outlines with their widgets

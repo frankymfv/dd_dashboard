@@ -12,6 +12,16 @@ module "datadog_dashboards" {
   source     = "./modules/datadog_dashboards"
   add_prefix = "[PROD] "
   
+  # Dashboard customization
+  dashboard_image_url = "https://dlaudio.fineshare.net/cover/song-ai/covers/mackenzie-border-collie.webp"
+  slack_team          = "franky_channel_test"
+  
+  # SLO IDs configuration
+  slo_ids = {
+    request_latency = "55851b7bf8d15e6597a0b55aa15ceadc"
+    availability_api = "b8c13e6ff68e500eb487c3aac7eaaa8a"
+  }
+  
   # Customize template variable values using object structure
   template_variables = {
     env = {
