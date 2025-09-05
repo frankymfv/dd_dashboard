@@ -1,41 +1,96 @@
-# Datadog Dashboards Module
+# terraform-datadog-dashboards
 
-This Terraform module manages Datadog dashboards using YAML files with flexible widget group controls.
+[![Latest Release](https://img.shields.io/github/release/your-org/terraform-datadog-dashboards.svg)](https://github.com/your-org/terraform-datadog-dashboards/releases/latest)
+[![Terraform Version](https://img.shields.io/badge/terraform-%3E%3D%201.0.0-blue.svg)](https://www.terraform.io/downloads.html)
+[![Datadog Provider](https://img.shields.io/badge/datadog%20provider-%3E%3D%203.0.0-orange.svg)](https://registry.terraform.io/providers/DataDog/datadog/latest)
+
+A Terraform module that creates comprehensive Datadog dashboards with modular widget components, SLO monitoring, and customizable template variables for filtering and organization.
+
+## Features
+
+- **Modular Dashboard Architecture**: Create dashboards using reusable widget components
+- **SLO Integration**: Built-in support for Service Level Objective monitoring
+- **Template Variables**: Configurable filtering by environment, team, namespace, and service
+- **Widget Toggle Control**: Enable/disable specific widget groups based on your needs
+- **YAML-based Configuration**: Easy-to-maintain dashboard layouts and widget definitions
+- **Multi-Environment Support**: Flexible configuration for different environments
 
 ## Usage
 
-### Basic Usage
-```hcl
-module "datadog_dashboards" {
-  source     = "./modules/datadog_dashboards"
-  add_prefix = "[PROD] "
-}
-```
+### Basic Example
 
-### Advanced Usage with Widget Controls
 ```hcl
 module "datadog_dashboards" {
-  source = "./modules/datadog_dashboards"
+  source = "path/to/terraform-datadog-dashboards"
   
-  add_prefix = "[PROD] "
+  # Dashboard customization
+  dashboard_title     = "[PROD] System Dashboard"
+  dashboard_image_url = "https://example.com/dashboard-image.png"
+  slack_team          = "your-slack-team"
   
-  # Customize template variables
+  # SLO IDs configuration
+  slo_ids = {
+    request_latency = "your-slo-id-1"
+    availability_api = "your-slo-id-2"
+  }
+  
+  # Template variables for filtering
   template_variables = {
     env = {
-      available_values = ["prod", "staging", "dev"]
+      available_values = ["prod", "stg", "dev"]
       default         = "prod"
     }
     team = {
-      available_values = ["backend", "frontend", "devops"]
-      default         = "backend"
+      available_values = ["platform", "data-team", "frontend"]
+      default         = "platform"
     }
     namespace = {
-      available_values = ["prod-backend", "staging-backend"]
-      default         = "prod-backend"
+      available_values = ["prod-platform", "stg-platform"]
+      default         = "prod-platform"
     }
     service = {
-      available_values = ["api-service", "worker-service", "web-service"]
-      default         = "api-service"
+      available_values = ["api-service", "web-service", "worker-service"]
+      default = "api-service"
+    }
+  }
+}
+```
+
+### Advanced Example with Widget Control
+
+```hcl
+module "datadog_dashboards" {
+  source = "path/to/terraform-datadog-dashboards"
+  
+  dashboard_title     = "[PROD] Custom System Dashboard"
+  dashboard_image_url = "https://example.com/custom-image.png"
+  slack_team          = "production-team"
+  
+  slo_ids = {
+    request_latency = "55851b7bf8d15e6597a0b55aa15ceadc"
+    availability_api = "b8c13e6ff68e500eb487c3aac7eaaa8a"
+  }
+  
+  template_variables = {
+    env = {
+      available_values = ["prod", "stg"]
+      default         = "prod"
+    }
+    team = {
+      available_values = ["asset-accounting", "platform"]
+      default         = "asset-accounting"
+    }
+    namespace = {
+      available_values = ["prod-asset-accounting", "stg-asset-accounting"]
+      default         = "prod-asset-accounting"
+    }
+    service = {
+      available_values = [
+        "asset-accounting-backend",
+        "asset-accounting-core",
+        "asset-accounting-admin-web"
+      ]
+      default = "asset-accounting-backend"
     }
   }
   
@@ -43,118 +98,201 @@ module "datadog_dashboards" {
   enabled_widgets = {
     dashboard_header = true
     overview_group = true
-    access_location = false          # Disable access location widget
+    access_location = false
     alb_information = true
     cpu_mem_kubernetes = true
     application_performance = true
     services_group = true
-    rds_group = false               # Disable RDS monitoring
-    cache_group = false             # Disable cache monitoring
+    rds_group = false
+    cache_group = true
     s3_group = true
   }
 }
 ```
 
-### Minimal Dashboard (Only Core Widgets)
-```hcl
-module "minimal_dashboard" {
-  source = "./modules/datadog_dashboards"
-  
-  enabled_widgets = {
-    dashboard_header = true
-    overview_group = true
-    alb_information = true
-    cpu_mem_kubernetes = true
-    # All other widgets disabled by default
-    access_location = false
-    application_performance = false
-    services_group = false
-    rds_group = false
-    cache_group = false
-    s3_group = false
-  }
-}
-```
+## Architecture
+
+The module uses a modular architecture with the following components:
+
+### Dashboard Layout (`dashboard/`)
+- **`dashboard_layout.yaml`**: Main dashboard configuration with widget references and layout positioning
+
+### Widget Components (`dashboard_widgets/`)
+- **`dashboard_header_note.yaml`**: Header with team information and contact details
+- **`overview_group.yaml`**: High-level system overview metrics
+- **`access_location_widget.yaml`**: Geographic access patterns
+- **`alb_information_widget.yaml`**: Application Load Balancer metrics
+- **`cpu_mem_kubernetes_widget.yaml`**: Kubernetes resource utilization
+- **`application_performance_group.yaml`**: Application performance metrics
+- **`services_group.yaml`**: Service health and status monitoring
+- **`rds_group.yaml`**: Database performance and health metrics
+- **`cache_group.yaml`**: Cache performance and hit rates
+- **`s3_group.yaml`**: Storage metrics and usage patterns
+
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 1.0.0 |
+| datadog | >= 3.0.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| datadog | >= 3.0.0 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| add_prefix | Optional prefix for all dashboard titles | `string` | `""` | no |
-| template_variables | Template variables configuration for dashboard filtering | `object` | See below | no |
+| dashboard_title | Title for the dashboard | `string` | `"[Franky]System Dashboard"` | no |
+| dashboard_image_url | URL for the dashboard header image | `string` | `"https://dlaudio.fineshare.net/cover/song-ai/covers/mackenzie-border-collie.webp"` | no |
+| slack_team | Slack team name for contact information | `string` | `"your_slack_team"` | no |
+| slo_ids | SLO IDs for dashboard widgets | `object` | See variables.tf | no |
+| template_variables | Template variables configuration for dashboard filtering | `object` | See variables.tf | no |
 | enabled_widgets | Configuration to enable/disable individual widget groups | `object` | All enabled | no |
 
-### template_variables Object Structure
+### SLO IDs Object Structure
+
+```hcl
+slo_ids = {
+  request_latency = "string"    # SLO ID for request latency monitoring
+  availability_api = "string"   # SLO ID for API availability monitoring
+}
+```
+
+### Template Variables Object Structure
+
 ```hcl
 template_variables = {
   env = {
-    available_values = list(string)  # List of environment values
-    default         = string         # Default environment value
+    available_values = ["prod", "stg", "dev"]
+    default         = "prod"
   }
   team = {
-    available_values = list(string)  # List of team values
-    default         = string         # Default team value
+    available_values = ["team1", "team2"]
+    default         = "team1"
   }
   namespace = {
-    available_values = list(string)  # List of namespace values
-    default         = string         # Default namespace value
+    available_values = ["namespace1", "namespace2"]
+    default         = "namespace1"
   }
   service = {
-    available_values = list(string)  # List of service values
-    default         = string         # Default service value
+    available_values = ["service1", "service2"]
+    default = "service1"
   }
 }
 ```
 
-### enabled_widgets Object Structure
+### Enabled Widgets Object Structure
+
 ```hcl
 enabled_widgets = {
-  dashboard_header = bool           # Dashboard header with branding
-  overview_group = bool            # SLO overview and monitors
-  access_location = bool           # Access location geomap widget
-  alb_information = bool           # ALB information table
-  cpu_mem_kubernetes = bool        # Kubernetes CPU/Memory table
-  application_performance = bool   # Application performance group
-  services_group = bool            # Services health and monitoring
-  rds_group = bool                # RDS database monitoring
-  cache_group = bool              # Cache (ElastiCache) monitoring
-  s3_group = bool                 # S3 storage monitoring
+  dashboard_header = bool      # Dashboard header with team info
+  overview_group = bool        # System overview metrics
+  access_location = bool       # Geographic access patterns
+  alb_information = bool       # Load balancer metrics
+  cpu_mem_kubernetes = bool    # Kubernetes resource metrics
+  application_performance = bool # Application performance metrics
+  services_group = bool        # Service health monitoring
+  rds_group = bool            # Database metrics
+  cache_group = bool          # Cache performance metrics
+  s3_group = bool             # Storage metrics
 }
 ```
 
-## Available Widget Groups
+## Outputs
 
-| Widget Group | Description | Use Case |
-|--------------|-------------|----------|
-| `dashboard_header` | Dashboard branding, title, and contact info | Always recommended |
-| `overview_group` | SLO tracking, availability metrics, monitors | Core monitoring |
-| `access_location` | Geographic access distribution map | Web applications |
-| `alb_information` | Load balancer metrics and health | AWS ALB users |
-| `cpu_mem_kubernetes` | Kubernetes resource utilization | Kubernetes deployments |
-| `application_performance` | HTTP response codes, latency, errors | Application monitoring |
-| `services_group` | Container states, dependency maps | Microservices |
-| `rds_group` | Database connections, performance, queries | RDS/Aurora users |
-| `cache_group` | Cache hit rates, memory usage, commands | Redis/ElastiCache users |
-| `s3_group` | Storage usage, request metrics, errors | S3 storage users |
+| Name | Description |
+|------|-------------|
+| dashboard_jsons | The dashboard JSON configurations after merging with prefix |
+| dashboard_titles | The dashboard titles after applying prefix |
+| dashboard_json | The dashboard JSON configurations after merging with prefix |
 
-## Dashboard YAML Format
+## Examples
 
-Place your dashboard YAML files in the `dashboards/` directory. The module will automatically:
+See the [examples](./examples) directory for complete working examples:
 
-1. Read all `.yaml` files from the `dashboards/` directory
-2. Apply the prefix to dashboard titles
-3. Create `datadog_dashboard_json` resources
+- [Basic Dashboard](./examples/basic-dashboard)
+- [Custom Widget Configuration](./examples/custom-widgets)
+- [Multi-Environment Setup](./examples/multi-environment)
 
-Example dashboard YAML:
-```yaml
-title: "System Load & Disk"
-background_color: "gray"
-show_title: true
-layout_type: "ordered"
-widgets:
-  - definition:
-      title: "System Load Average"
-      type: "timeseries"
-      requests:
-        - q: "avg:system.load.1{*}"
+## Widget Customization
+
+### Adding New Widgets
+
+1. Create a new YAML file in the `dashboard_widgets/` directory
+2. Add the widget reference to `dashboard/dashboard_layout.yaml`
+3. Update the `widget_enabled_map` in `main.tf`
+4. Add the widget to the `enabled_widgets` variable
+
+### Modifying Existing Widgets
+
+Edit the corresponding YAML file in the `dashboard_widgets/` directory. The module supports template substitution for dynamic values.
+
+### Template Variables
+
+Widgets can use the following template variables:
+- `${dashboard_image_url}`: Dashboard header image URL
+- `${slack_team}`: Slack team name
+- `${slo_ids.request_latency}`: Request latency SLO ID
+- `${slo_ids.availability_api}`: API availability SLO ID
+
+## Development
+
+### Prerequisites
+
+- Terraform >= 1.0.0
+- Datadog API and App keys
+- Go 1.19+ (for testing)
+
+### Testing
+
+```bash
+# Initialize Terraform
+terraform init
+
+# Plan the deployment
+terraform plan
+
+# Apply the configuration
+terraform apply
+
+# Destroy resources
+terraform destroy
 ```
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support and questions:
+
+- Create an issue in the GitHub repository
+- Contact the team via Slack: `#datadog-dashboards`
+- Review the [documentation](./docs) for detailed guides
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history.
+
+## Related Projects
+
+- [terraform-datadog-monitors](https://github.com/your-org/terraform-datadog-monitors) - Datadog monitoring and alerting
+- [terraform-datadog-slos](https://github.com/your-org/terraform-datadog-slos) - Service Level Objectives management
+- [terraform-datadog-logs](https://github.com/your-org/terraform-datadog-logs) - Log management and processing
+
+---
+
+Made with ❤️ by the Platform Team
