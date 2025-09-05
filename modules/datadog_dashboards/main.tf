@@ -8,10 +8,51 @@ locals {
   # Load all widget files
   widget_files = fileset(local.widgets_path, "*.yaml")
   
-  # Parse dashboard outlines
+  # Parse dashboard outlines with template substitution
   dashboard_outlines = {
     for f in local.dashboard_files :
-    replace(basename(f), ".yaml", "") => yamldecode(file("${local.dashboard_path}/${f}"))
+    replace(basename(f), ".yaml", "") => yamldecode(
+      templatefile("${local.dashboard_path}/${f}", {
+        env_values        = var.template_variables.env.available_values
+        default_env       = var.template_variables.env.default
+        team_values       = var.template_variables.team.available_values
+        default_team      = var.template_variables.team.default
+        namespace_values  = var.template_variables.namespace.available_values
+        default_namespace = var.template_variables.namespace.default
+        service_values    = var.template_variables.service.available_values
+        default_service   = var.template_variables.service.default
+      })
+    )
+  }
+  
+  # Filter widgets based on enabled_widgets configuration
+  filtered_dashboard_outlines = {
+    for dashboard_name, dashboard_outline in local.dashboard_outlines :
+    dashboard_name => merge(
+      dashboard_outline,
+      {
+        widgets = [
+          for widget_ref in dashboard_outline.widgets :
+          widget_ref
+          if can(local.widget_enabled_map[replace(basename(widget_ref.widget_file), ".yaml", "")]) && 
+             local.widget_enabled_map[replace(basename(widget_ref.widget_file), ".yaml", "")]
+        ]
+      }
+    )
+  }
+  
+  # Widget enable/disable mapping
+  widget_enabled_map = {
+    "dashboard_header_note" = var.enabled_widgets.dashboard_header
+    "overview_group" = var.enabled_widgets.overview_group
+    "access_location_widget" = var.enabled_widgets.access_location
+    "alb_information_widget" = var.enabled_widgets.alb_information
+    "cpu_mem_kubernetes_widget" = var.enabled_widgets.cpu_mem_kubernetes
+    "application_performance_group" = var.enabled_widgets.application_performance
+    "services_group" = var.enabled_widgets.services_group
+    "rds_group" = var.enabled_widgets.rds_group
+    "cache_group" = var.enabled_widgets.cache_group
+    "s3_group" = var.enabled_widgets.s3_group
   }
   
   # Parse widget files
@@ -20,9 +61,9 @@ locals {
     replace(basename(f), ".yaml", "") => yamldecode(file("${local.widgets_path}/${f}"))
   }
   
-  # Build complete dashboards by merging dashboard outlines with their widgets
+  # Build complete dashboards by merging filtered dashboard outlines with their widgets
   dashboards = {
-    for dashboard_name, dashboard_outline in local.dashboard_outlines :
+    for dashboard_name, dashboard_outline in local.filtered_dashboard_outlines :
     dashboard_name => merge(
       dashboard_outline,
       {

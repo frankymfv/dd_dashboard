@@ -82,34 +82,20 @@ widgets:
 template_variables:
   - name: "env"
     prefix: "env"
-    available_values:
-      - "prod"
-      - "stg"
-      - "production"
-      - "staging"
-    default: "prod"
+    available_values: ${jsonencode(env_values)}
+    default: "${default_env}"
   
   - name: "team"
     prefix: "team"
-    available_values: []
-    default: "asset-accounting"
+    available_values: ${jsonencode(team_values)}
+    default: "${default_team}"
   
   - name: "namespace"
     prefix: "namespace"
-    available_values: []
-    default: "prod-asset-accounting"
+    available_values: ${jsonencode(namespace_values)}
+    default: "${default_namespace}"
   
   - name: "service"
     prefix: "service"
-    available_values:
-      - "aa-n8n"
-      - "asset_accounting_mfid"
-      - "asset-accounting"
-      - "asset-accounting-core"
-      - "asset_accounting_mysql"
-      - "asset-accounting-backend"
-      - "asset_accounting_accplus"
-      - "asset_accounting_googleoauth2"
-      - "asset-accounting-admin-web"
-      - "asset-accounting-datapatch"
-    default: "asset-accounting-backend"
+    available_values: ${jsonencode(service_values)}
+    default: "${default_service}"

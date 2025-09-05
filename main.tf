@@ -8,15 +8,49 @@ provider "datadog" {
 }
 
 
-
-# provider "datadog" {
-#   api_key = var.datadog_api_key
-#   app_key = var.datadog_app_key
-# }
-
 module "datadog_dashboards" {
   source     = "./modules/datadog_dashboards"
   add_prefix = "[PROD] "
+  
+  # Customize template variable values using object structure
+  template_variables = {
+    env = {
+      available_values = ["prod", "stg", "production", "staging"]
+      default         = "prod"
+    }
+    team = {
+      available_values = ["asset-accounting", "platform", "data-team"]
+      default         = "asset-accounting"
+    }
+    namespace = {
+      available_values = ["prod-asset-accounting", "stg-asset-accounting"]
+      default         = "prod-asset-accounting"
+    }
+    service = {
+      available_values = [
+        "aa-n8n",
+        "asset_accounting_mfid",
+        "asset-accounting",
+        "asset-accounting-core",
+        "asset_accounting_mysql",
+        "asset-accounting-backend",
+        "asset_accounting_accplus",
+        "asset_accounting_googleoauth2",
+        "asset-accounting-admin-web",
+        "asset-accounting-datapatch"
+      ]
+      default = "asset-accounting-backend"
+    }
+  }
+  
+  # Enable/disable specific widget groups based on your needs
+  enabled_widgets = {
+    application_performance = true   # Keep application metrics
+    services_group = true            # Keep service health monitoring
+    rds_group = true                 # Keep database monitoring
+    cache_group = true               # Keep cache monitoring
+    s3_group = true                  # Keep storage monitoring
+  }
 }
 
 # Outputs to display module results
