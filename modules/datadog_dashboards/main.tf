@@ -13,6 +13,7 @@ locals {
     for f in local.dashboard_files :
     replace(basename(f), ".yaml", "") => yamldecode(
       templatefile("${local.dashboard_path}/${f}", {
+        dashboard_title   = var.dashboard_title
         env_values        = var.template_variables.env.available_values
         default_env       = var.template_variables.env.default
         team_values       = var.template_variables.team.available_values
@@ -92,14 +93,7 @@ locals {
 resource "datadog_dashboard_json" "dashboards" {
   for_each = local.dashboards
 
-  dashboard = jsonencode(
-    merge(
-      each.value,
-      {
-        title = "${var.add_prefix}${each.value.title}"
-      }
-    )
-  )
+  dashboard = jsonencode(each.value)
 }
 
 

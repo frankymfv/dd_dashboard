@@ -1,7 +1,7 @@
-variable "add_prefix" {
-  description = "Optional prefix for all dashboard titles"
+variable "dashboard_title" {
+  description = "Title for the dashboard"
   type        = string
-  default     = ""
+  default     = "[Franky]System Dashboard"
 }
 
 variable "dashboard_image_url" {

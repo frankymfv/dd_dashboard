@@ -9,10 +9,10 @@ provider "datadog" {
 
 
 module "datadog_dashboards" {
-  source     = "./modules/datadog_dashboards"
-  add_prefix = "[PROD] "
+  source = "./modules/datadog_dashboards"
   
   # Dashboard customization
+  dashboard_title     = "[Franky][PROD] SLO Standard System Dashboard"
   dashboard_image_url = "https://dlaudio.fineshare.net/cover/song-ai/covers/mackenzie-border-collie.webp"
   slack_team          = "franky_channel_test"
   

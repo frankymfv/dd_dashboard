@@ -1,4 +1,4 @@
-title: "[SLO standard] System dashboard Testing"
+title: "${dashboard_title}"
 description: "Comprehensive system dashboard with SLO monitoring and performance metrics"
 layout_type: "ordered"
 notify_list: []
