@@ -1,0 +1,513 @@
+definition:
+  title: "Application performance"
+  background_color: "vivid_orange"
+  show_title: true
+  type: "group"
+  layout_type: "ordered"
+  widgets:
+    - id: 1073343131838282
+      definition:
+        title: "ALBs with Most Errors"
+        title_size: "16"
+        title_align: "left"
+        type: "toplist"
+        requests:
+          - response_format: "scalar"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.applicationelb.httpcode_elb_4xx{$env, $team} by {loadbalancer}.as_count()"
+                aggregator: "avg"
+              - data_source: "metrics"
+                name: "query2"
+                query: "sum:aws.applicationelb.httpcode_elb_5xx{$env, $team} by {loadbalancer}.as_count()"
+                aggregator: "avg"
+              - data_source: "metrics"
+                name: "query3"
+                query: "sum:aws.applicationelb.httpcode_elb_3xx{$env, $team} by {loadbalancer}.as_count()"
+                aggregator: "avg"
+            formulas:
+              - formula: "query1 + query2 + query3"
+            sort:
+              order_by:
+                - type: "formula"
+                  index: 0
+                  order: "desc"
+              count: 10
+        style: {}
+      layout:
+        "x": 0
+        "y": 0
+        "width": 12
+        "height": 3
+
+    - id: 4592139114289270
+      definition:
+        type: "note"
+        content: "Target"
+        background_color: "blue"
+        font_size: "18"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 3
+        "width": 6
+        "height": 1
+
+    - id: 5447829694246347
+      definition:
+        type: "note"
+        content: "Loadbalancer"
+        background_color: "blue"
+        font_size: "18"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 6
+        "y": 3
+        "width": 6
+        "height": 1
+
+    - id: 1300925343531273
+      definition:
+        title: "HTTP 5xx Responses - Target"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.applicationelb.httpcode_target_5xx{$env, $team} by {targetgroup}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "red"
+            display_type: "bars"
+        custom_links: []
+      layout:
+        "x": 0
+        "y": 4
+        "width": 6
+        "height": 3
+
+    - id: 272829567413927
+      definition:
+        title: "HTTP 5xx Responses - Loadbalancer"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.applicationelb.httpcode_elb_5xx{$env, $team} by {loadbalancer}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "blue"
+            display_type: "bars"
+        custom_links: []
+      layout:
+        "x": 6
+        "y": 4
+        "width": 6
+        "height": 3
+
+    - id: 4498335611337852
+      definition:
+        title: "HTTP 4xx Responses - Target"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.applicationelb.httpcode_target_4xx{$env, $team} by {targetgroup}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "red"
+            display_type: "bars"
+        custom_links: []
+      layout:
+        "x": 0
+        "y": 7
+        "width": 6
+        "height": 3
+
+    - id: 5950734939383189
+      definition:
+        title: "HTTP 4xx Responses - Loadbalancer"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.applicationelb.httpcode_elb_4xx{$env, $team} by {loadbalancer}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "blue"
+            display_type: "bars"
+        custom_links: []
+      layout:
+        "x": 6
+        "y": 7
+        "width": 6
+        "height": 3
+
+    - id: 4250273306615043
+      definition:
+        title: "HTTP 3xx Responses - Target"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.applicationelb.httpcode_target_3xx{$env, $team} by {targetgroup}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "bars"
+      layout:
+        "x": 0
+        "y": 10
+        "width": 6
+        "height": 3
+
+    - id: 8837428076933660
+      definition:
+        title: "HTTP 3xx Responses - Loadbalancer"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.applicationelb.httpcode_elb_3xx{$env, $team} by {loadbalancer}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "blue"
+            display_type: "bars"
+        custom_links: []
+      layout:
+        "x": 6
+        "y": 10
+        "width": 6
+        "height": 3
+
+    - id: 6965936943061744
+      definition:
+        type: "note"
+        content: "Request statistic"
+        background_color: "blue"
+        font_size: "18"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 13
+        "width": 12
+        "height": 1
+
+    - id: 5371479232141822
+      definition:
+        title: "Application: Request Latency Top 10"
+        title_size: "16"
+        title_align: "left"
+        type: "toplist"
+        requests:
+          - queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "avg:trace.http.request{$env,service:asset-accounting-backend*} by {resource_name}"
+                aggregator: "avg"
+            response_format: "scalar"
+            conditional_formats:
+              - comparator: "<="
+                value: 0.2
+                palette: "white_on_green"
+              - comparator: "<="
+                value: 0.5
+                palette: "white_on_yellow"
+              - comparator: ">"
+                value: 0.5
+                palette: "white_on_red"
+            formulas:
+              - formula: "query1"
+            sort:
+              count: 10
+              order_by:
+                - type: "formula"
+                  index: 0
+                  order: "desc"
+        style:
+          display:
+            type: "stacked"
+            legend: "automatic"
+          palette: "dog_classic"
+          scaling: "absolute"
+      layout:
+        "x": 0
+        "y": 14
+        "width": 6
+        "height": 3
+
+    - id: 165366499120846
+      definition:
+        title: "Request count"
+        type: "query_table"
+        requests:
+          - queries:
+              - name: "query2"
+                data_source: "metrics"
+                query: "avg:aws.applicationelb.request_count{$env,$team} by {loadbalancer,targetgroup}.as_count()"
+                aggregator: "avg"
+            response_format: "scalar"
+            sort:
+              count: 500
+              order_by:
+                - type: "formula"
+                  index: 0
+                  order: "desc"
+            formulas:
+              - formula: "query2"
+                cell_display_mode: "bar"
+                number_format:
+                  unit:
+                    unit_name: "request"
+                    per_unit_name: "second"
+                    type: "canonical_unit"
+        has_search_bar: "auto"
+      layout:
+        "x": 6
+        "y": 14
+        "width": 6
+        "height": 3
+
+    - id: 2688997777563119
+      definition:
+        title: "Average Target Response Time by ALB"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        time:
+          type: "live"
+          unit: "hour"
+          value: 4
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "avg:aws.applicationelb.target_response_time.average{$env, $team} by {loadbalancer}"
+            response_format: "timeseries"
+            style:
+              palette: "datadog16"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 17
+        "width": 6
+        "height": 3
+
+    - id: 6563558718131377
+      definition:
+        title: "Target Response Time (p99 and p95) by ALB"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        time:
+          type: "live"
+          unit: "hour"
+          value: 4
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+              - formula: "query2"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "avg:aws.applicationelb.target_response_time.p99{$env, $team} by {loadbalancer}"
+              - data_source: "metrics"
+                name: "query2"
+                query: "avg:aws.applicationelb.target_response_time.p95{$env, $team} by {loadbalancer}"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 6
+        "y": 17
+        "width": 6
+        "height": 3
+
+    - id: 5666851836132190
+      definition:
+        title: "ALB: Request Count (remove)"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "alb"
+                formula: "query1"
+            queries:
+              - query: "avg:aws.applicationelb.request_count{$env,$team} by {loadbalancer}.as_count()"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "blue"
+            display_type: "bars"
+      layout:
+        "x": 0
+        "y": 20
+        "width": 6
+        "height": 3
+
+    - id: 1997678994766062
+      definition:
+        title: "Application: Request Hits By Http Status (remove)"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "sum:trace.http.request.hits.by_http_status{$env, $service} by {http.status_code}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "semantic"
+              order_by: "values"
+              color_order: "shuffled"
+              order_reverse: false
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "bars"
+      layout:
+        "x": 6
+        "y": 20
+        "width": 6
+        "height": 3

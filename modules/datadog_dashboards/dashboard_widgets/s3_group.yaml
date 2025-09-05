@@ -1,0 +1,377 @@
+definition:
+  title: "S3"
+  background_color: "vivid_yellow"
+  show_title: true
+  type: "group"
+  layout_type: "ordered"
+  widgets:
+    - id: 7929626387265679
+      definition:
+        type: "note"
+        content: "## Storage"
+        background_color: "blue"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 0
+        "width": 12
+        "height": 1
+
+    - id: 8570971748305728
+      definition:
+        title: "Bucket Size"
+        title_size: "16"
+        title_align: "left"
+        type: "toplist"
+        requests:
+          - queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "max:aws.s3.bucket_size_bytes{$env, $team} by {bucketname}"
+                aggregator: "avg"
+            response_format: "scalar"
+            formulas:
+              - formula: "query1"
+            sort:
+              count: 10
+              order_by:
+                - type: "formula"
+                  index: 0
+                  order: "desc"
+        style:
+          display:
+            type: "stacked"
+            legend: "automatic"
+      layout:
+        "x": 0
+        "y": 1
+        "width": 6
+        "height": 2
+
+    - id: 8328221872713176
+      definition:
+        title: "Number Of Objects"
+        title_size: "16"
+        title_align: "left"
+        type: "toplist"
+        requests:
+          - queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.number_of_objects{$env, $team} by {bucketname}"
+                aggregator: "avg"
+            response_format: "scalar"
+            formulas:
+              - formula: "query1"
+            sort:
+              count: 10
+              order_by:
+                - type: "formula"
+                  index: 0
+                  order: "desc"
+        style:
+          display:
+            type: "stacked"
+            legend: "automatic"
+          palette: "dog_classic"
+      layout:
+        "x": 6
+        "y": 1
+        "width": 6
+        "height": 2
+
+    - id: 6486357617624130
+      definition:
+        type: "note"
+        content: "## Request"
+        background_color: "blue"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 3
+        "width": 12
+        "height": 1
+
+    - id: 8808407979593502
+      definition:
+        title: "Total request"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.all_requests{$env, $team} by {bucketname}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 4
+        "width": 4
+        "height": 2
+
+    - id: 7242595152565979
+      definition:
+        title: "4xx Error Count"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.4xx_errors{$env, $team} by {bucketname}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 4
+        "y": 4
+        "width": 4
+        "height": 2
+
+    - id: 6573973017727565
+      definition:
+        title: "5xx Error Count"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.5xx_errors{$env, $team} by {bucketname}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 8
+        "y": 4
+        "width": 4
+        "height": 2
+
+    - id: 6957054040588860
+      definition:
+        title: "Get request"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.get_requests{$env}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 6
+        "width": 4
+        "height": 2
+
+    - id: 7794039581113200
+      definition:
+        title: "Bytes Downloaded"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.bytes_downloaded{$env, $team} by {bucketname}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 4
+        "y": 6
+        "width": 4
+        "height": 2
+
+    - id: 6292044473495276
+      definition:
+        title: "Head request"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.head_requests{$env, $team} by {bucketname}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 8
+        "y": 6
+        "width": 4
+        "height": 2
+
+    - id: 5114618988999685
+      definition:
+        title: "Put request"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.put_requests{$env, $team} by {bucketname}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 8
+        "width": 4
+        "height": 2
+
+    - id: 3757294341601893
+      definition:
+        title: "Bytes Uploaded"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - data_source: "metrics"
+                name: "query1"
+                query: "sum:aws.s3.bytes_uploaded{$env, $team} by {bucketname}.as_count()"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 4
+        "y": 8
+        "width": 4
+        "height": 2

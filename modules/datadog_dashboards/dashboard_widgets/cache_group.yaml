@@ -1,0 +1,505 @@
+definition:
+  title: "Cache"
+  background_color: "vivid_blue"
+  show_title: true
+  type: "group"
+  layout_type: "ordered"
+  widgets:
+    - id: 3817844475698903
+      definition:
+        type: "note"
+        content: "## Health & Event"
+        background_color: "blue"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 0
+        "width": 12
+        "height": 1
+
+    - id: 4585011139413550
+      definition:
+        title: "Current connection"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "replica_lag"
+                formula: "query1"
+            queries:
+              - query: "avg:aws.elasticache.curr_connections{$env, $team} by {cacheclusterid}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "warm"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 0
+        "y": 1
+        "width": 6
+        "height": 3
+
+    - id: 4216390612194744
+      definition:
+        title: "Replication lag by node"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "replica_lag"
+                formula: "query1"
+            queries:
+              - query: "avg:aws.elasticache.replication_lag{team:asset-accounting,$env} by {cacheclusterid}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "warm"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 6
+        "y": 1
+        "width": 6
+        "height": 3
+
+    - id: 6090998058320394
+      definition:
+        type: "note"
+        content: "## Resource Utilization"
+        background_color: "orange"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 4
+        "width": 12
+        "height": 1
+
+    - id: 5440436640481812
+      definition:
+        title: "CPU utilization by node"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - query: "avg:aws.elasticache.cpuutilization{team:asset-accounting,$env} by {cacheclusterid}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 0
+        "y": 5
+        "width": 6
+        "height": 3
+
+    - id: 4497746113785906
+      definition:
+        title: "Memory Usage Percent"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "usage_mem_percent"
+                formula: "query2"
+            queries:
+              - query: "avg:aws.elasticache.database_memory_usage_percentage{$env, $team} by {cacheclusterid}"
+                data_source: "metrics"
+                name: "query2"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 6
+        "y": 5
+        "width": 6
+        "height": 3
+
+    - id: 6147650102414856
+      definition:
+        title: "Memory Swap Usage & Freeable"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "swap_usage_mem_bytes"
+                formula: "query3"
+            queries:
+              - query: "avg:aws.elasticache.swap_usage{$env, $team} by {cacheclusterid}"
+                data_source: "metrics"
+                name: "query3"
+              - query: "avg:aws.elasticache.freeable_memory{$env} by {cacheclusterid}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 8
+        "width": 4
+        "height": 3
+
+    - id: 6561000202487354
+      definition:
+        title: "Network outgoing bytes by node"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - query: "avg:aws.elasticache.network_bytes_out{$env, $team} by {cacheclusterid}.as_rate()"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "semantic"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 4
+        "y": 8
+        "width": 4
+        "height": 3
+
+    - id: 668140859831174
+      definition:
+        title: "Network incomingbytes by node"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - query: "avg:aws.elasticache.network_bytes_in{$env, $team} by {cacheclusterid}.as_rate()"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "blue"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 8
+        "y": 8
+        "width": 4
+        "height": 3
+
+    - id: 8361184456684846
+      definition:
+        type: "note"
+        content: "## Performance"
+        background_color: "pink"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 11
+        "width": 12
+        "height": 1
+
+    - id: 5779475810823098
+      definition:
+        title: "Cache Hit Rate Percent"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query3"
+            queries:
+              - query: "avg:aws.elasticache.cache_hit_rate{$env, $team} by {cacheclusterid}"
+                data_source: "metrics"
+                name: "query3"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 12
+        "width": 4
+        "height": 3
+
+    - id: 7027987457751172
+      definition:
+        title: "Cache Hit&Miss"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+              - formula: "query2"
+            queries:
+              - query: "sum:aws.elasticache.cache_hits{$env, $team} by {cacheclusterid}.as_count()"
+                data_source: "metrics"
+                name: "query1"
+              - query: "sum:aws.elasticache.cache_misses{$env, $team} by {cacheclusterid}.as_count()"
+                data_source: "metrics"
+                name: "query2"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 4
+        "y": 12
+        "width": 4
+        "height": 3
+
+    - id: 1767743536822608
+      definition:
+        title: "Command execution latency"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "get latency"
+                formula: "query1"
+              - alias: "set latency"
+                formula: "query2"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "avg:aws.elasticache.get_type_cmds_latency{$env, $team} by {cacheclusterid}"
+              - name: "query2"
+                data_source: "metrics"
+                query: "avg:aws.elasticache.set_type_cmds_latency{$env, $team} by {cacheclusterid}"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 8
+        "y": 12
+        "width": 4
+        "height": 3
+
+    - id: 25546801485088
+      definition:
+        title: "Evictions"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "sum:aws.elasticache.evictions{$env, $team} by {cacheclusterid}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 15
+        "width": 4
+        "height": 3
+
+    - id: 6955278106283784
+      definition:
+        title: "GET command execution"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "sum:aws.elasticache.get_type_cmds{$env, $team} by {cacheclusterid}.as_count()"
+              - name: "query2"
+                data_source: "metrics"
+                query: "sum:aws.elasticache.set_type_cmds{$env, $team} by {cacheclusterid}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "bars"
+      layout:
+        "x": 4
+        "y": 15
+        "width": 4
+        "height": 3
+
+    - id: 2324835489522436
+      definition:
+        title: "SET command execution"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "set cmds"
+                formula: "query2"
+            queries:
+              - name: "query2"
+                data_source: "metrics"
+                query: "sum:aws.elasticache.set_type_cmds{$env, $team} by {cacheclusterid}.as_count()"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "bars"
+      layout:
+        "x": 8
+        "y": 15
+        "width": 4
+        "height": 3

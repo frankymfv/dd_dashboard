@@ -1,0 +1,68 @@
+id: 6101641539864797
+definition:
+  title: "CPU and Mem by Kubernetes Objects"
+  title_size: "16"
+  title_align: "left"
+  type: "query_table"
+  requests:
+    - response_format: "scalar"
+      queries:
+        - query: "sum:kubernetes.cpu.requests{$env,kube_namespace:$namespace.value} by {kube_namespace,env,kube_deployment,kube_stateful_set}"
+          data_source: "metrics"
+          name: "query1"
+          aggregator: "avg"
+        - query: "sum:kubernetes.cpu.usage.total{$env,kube_namespace:$namespace.value} by {kube_namespace,env,kube_deployment,kube_stateful_set}"
+          data_source: "metrics"
+          name: "query7"
+          aggregator: "avg"
+        - query: "sum:kubernetes.memory.requests{$env,kube_namespace:$namespace.value} by {kube_namespace,env,kube_deployment,kube_stateful_set}"
+          data_source: "metrics"
+          name: "query5"
+          aggregator: "avg"
+        - query: "sum:kubernetes.memory.usage{$env,kube_namespace:$namespace.value} by {kube_namespace,env,kube_deployment,kube_stateful_set}"
+          data_source: "metrics"
+          name: "query8"
+          aggregator: "avg"
+        - query: "sum:kubernetes.cpu.limits{$env,kube_namespace:$namespace.value} by {kube_namespace,env,kube_deployment,kube_stateful_set}"
+          data_source: "metrics"
+          name: "query2"
+          aggregator: "avg"
+        - query: "sum:kubernetes.memory.limits{$env,kube_namespace:$namespace.value} by {kube_namespace,env,kube_deployment,kube_stateful_set}"
+          data_source: "metrics"
+          name: "query6"
+          aggregator: "avg"
+      sort:
+        count: 500
+        order_by:
+          - type: "formula"
+            index: 0
+            order: "desc"
+      formulas:
+        - alias: "CPU requests"
+          cell_display_mode: "number"
+          formula: "query1"
+        - alias: "CPU usage"
+          cell_display_mode: "number"
+          formula: "query7"
+        - alias: "MEM requests"
+          formula: "query5"
+        - alias: "MEM usage"
+          formula: "query8"
+        - alias: "% CPU requests"
+          conditional_formats:
+            - palette: "white_on_red"
+              comparator: "<"
+              value: 60
+          formula: "query7 / (query1 * 1000000000) * 100"
+        - alias: "% MEM requests"
+          conditional_formats:
+            - palette: "white_on_red"
+              comparator: "<"
+              value: 60
+          formula: "query8 / query5 * 100"
+  has_search_bar: "auto"
+layout:
+  "x": 0
+  "y": 3
+  "width": 12
+  "height": 4

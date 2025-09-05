@@ -1,0 +1,91 @@
+definition:
+  title: "Overview"
+  background_color: "white"
+  show_title: true
+  type: "group"
+  layout_type: "ordered"
+  widgets:
+    - id: 6437893386612160
+      definition:
+        title: "Request latency (≤500ms)"
+        title_size: "16"
+        title_align: "left"
+        type: "slo"
+        slo_id: "55851b7bf8d15e6597a0b55aa15ceadc"
+        view_type: "detail"
+        view_mode: "overall"
+        time_windows:
+          - "30d"
+          - "7d"
+          - "90d"
+        show_error_budget: true
+      layout:
+        "x": 0
+        "y": 0
+        "width": 4
+        "height": 2
+
+    - id: 6462813809257729
+      definition:
+        title: "Availability API Server"
+        title_size: "16"
+        title_align: "left"
+        type: "slo"
+        slo_id: "b8c13e6ff68e500eb487c3aac7eaaa8a"
+        view_type: "detail"
+        view_mode: "overall"
+        time_windows:
+          - "30d"
+          - "7d"
+          - "90d"
+        show_error_budget: true
+        additional_query_filters: "$team,$env"
+      layout:
+        "x": 4
+        "y": 0
+        "width": 4
+        "height": 2
+
+    - id: 1791830803502712
+      definition:
+        title: "SLO by month"
+        title_size: "16"
+        title_align: "left"
+        requests:
+          - request_type: "slo_list"
+            query:
+              query_string: "$team"
+              limit: 100
+              rollup:
+                type: "month"
+              sort:
+                - column: "status.sli"
+                  order: "asc"
+        type: "slo_list"
+      layout:
+        "x": 0
+        "y": 2
+        "width": 8
+        "height": 3
+
+    - id: 6519760145635288
+      definition:
+        title: "Monitors"
+        type: "manage_status"
+        display_format: "countsAndList"
+        color_preference: "text"
+        hide_zero_counts: true
+        show_status: true
+        last_triggered_format: "relative"
+        query: "$team"
+        sort: "status,asc"
+        count: 50
+        start: 0
+        summary_type: "combined"
+        show_priority: false
+        show_last_triggered: false
+      layout:
+        "x": 0
+        "y": 5
+        "width": 8
+        "height": 4

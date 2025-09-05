@@ -1,0 +1,115 @@
+title: "[SLO standard] System dashboard Testing"
+description: "Comprehensive system dashboard with SLO monitoring and performance metrics"
+layout_type: "ordered"
+notify_list: []
+reflow_type: "fixed"
+tags: []
+
+# Widget references - these will be loaded from dashboard_widgets folder
+widgets:
+  - widget_file: "dashboard_header_note.yaml"
+    layout:
+      "x": 0
+      "y": 0
+      "width": 4
+      "height": 7
+  
+  - widget_file: "overview_group.yaml"
+    layout:
+      "x": 4
+      "y": 0
+      "width": 8
+      "height": 10
+  
+  - widget_file: "access_location_widget.yaml"
+    layout:
+      "x": 0
+      "y": 7
+      "width": 4
+      "height": 3
+  
+  - widget_file: "alb_information_widget.yaml"
+    layout:
+      "x": 0
+      "y": 0
+      "width": 12
+      "height": 3
+  
+  - widget_file: "cpu_mem_kubernetes_widget.yaml"
+    layout:
+      "x": 0
+      "y": 3
+      "width": 12
+      "height": 4
+  
+  - widget_file: "application_performance_group.yaml"
+    layout:
+      "x": 0
+      "y": 17
+      "width": 12
+      "height": 1
+  
+  - widget_file: "services_group.yaml"
+    layout:
+      "x": 0
+      "y": 18
+      "width": 12
+      "height": 15
+      "is_column_break": true
+  
+  - widget_file: "rds_group.yaml"
+    layout:
+      "x": 0
+      "y": 33
+      "width": 12
+      "height": 1
+  
+  - widget_file: "cache_group.yaml"
+    layout:
+      "x": 0
+      "y": 34
+      "width": 12
+      "height": 1
+  
+  - widget_file: "s3_group.yaml"
+    layout:
+      "x": 0
+      "y": 35
+      "width": 12
+      "height": 11
+
+# Template variables
+template_variables:
+  - name: "env"
+    prefix: "env"
+    available_values:
+      - "prod"
+      - "stg"
+      - "production"
+      - "staging"
+    default: "prod"
+  
+  - name: "team"
+    prefix: "team"
+    available_values: []
+    default: "asset-accounting"
+  
+  - name: "namespace"
+    prefix: "namespace"
+    available_values: []
+    default: "prod-asset-accounting"
+  
+  - name: "service"
+    prefix: "service"
+    available_values:
+      - "aa-n8n"
+      - "asset_accounting_mfid"
+      - "asset-accounting"
+      - "asset-accounting-core"
+      - "asset_accounting_mysql"
+      - "asset-accounting-backend"
+      - "asset_accounting_accplus"
+      - "asset_accounting_googleoauth2"
+      - "asset-accounting-admin-web"
+      - "asset-accounting-datapatch"
+    default: "asset-accounting-backend"

@@ -1,0 +1,7 @@
+# Terraform directories and files
+**/.terraform/
+**/.terraform.lock.hcl
+.terraform.lock.hcl
+
+dashboard_json_output*.json
+yaml_to_json_data_result.json

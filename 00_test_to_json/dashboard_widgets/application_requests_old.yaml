@@ -1,0 +1,12 @@
+definition:
+  title: "[FrankyTesting] Application Requests"
+  show_legend: false
+  type: "timeseries"
+  requests:
+    - on_right_yaxis: false
+      response_format: "timeseries"
+      queries:
+        - data_source: "metrics"
+          name: "query1"
+          query: "avg:app.franky.requests{*} by {service}"
+      display_type: "line"

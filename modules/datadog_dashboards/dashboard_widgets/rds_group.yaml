@@ -1,0 +1,631 @@
+definition:
+  title: "Relational DB(RDS)"
+  background_color: "vivid_pink"
+  show_title: true
+  type: "group"
+  layout_type: "ordered"
+  widgets:
+    - id: 4823153991977135
+      definition:
+        type: "note"
+        content: "## Health & Event"
+        background_color: "blue"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 0
+        "width": 12
+        "height": 1
+
+    - id: 6809748745171448
+      definition:
+        title: "Connection"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "connections"
+                formula: "query4"
+            queries:
+              - query: "sum:aws.rds.database_connections{$env,$team} by {dbinstanceidentifier}"
+                data_source: "metrics"
+                name: "query4"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers:
+          - label: "60 < y < 80"
+            value: "60 < y < 80"
+            display_type: "warning dashed"
+          - label: "y > 80"
+            value: "y > 80"
+            display_type: "error dashed"
+      layout:
+        "x": 0
+        "y": 1
+        "width": 6
+        "height": 3
+
+    - id: 2670333195603840
+      definition:
+        title: "Replication lag"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "replica_lag"
+                formula: "query1"
+            queries:
+              - query: "avg:aws.rds.aurora_replica_lag{$env,$team} by {dbclusteridentifier}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "warm"
+              order_reverse: false
+            display_type: "area"
+        markers:
+          - label: "y < 50"
+            value: "y < 50"
+            display_type: "ok dashed"
+          - label: "50 < y < 100"
+            value: "50 < y < 100"
+            display_type: "warning dashed"
+          - label: "y > 100"
+            value: "y > 100"
+            display_type: "error dashed"
+        custom_links: []
+      layout:
+        "x": 6
+        "y": 1
+        "width": 6
+        "height": 3
+
+    - id: 6913547300658672
+      definition:
+        title: "Event (consider remove)"
+        title_size: "16"
+        title_align: "left"
+        requests:
+          - query:
+              query_string: "source:amazon_rds $env $team"
+              data_source: "event_stream"
+              event_size: "s"
+            columns: []
+            response_format: "event_list"
+        type: "list_stream"
+      layout:
+        "x": 0
+        "y": 4
+        "width": 12
+        "height": 3
+
+    - id: 3860374700301712
+      definition:
+        type: "note"
+        content: "## Resource Utilization"
+        background_color: "orange"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 7
+        "width": 12
+        "height": 1
+
+    - id: 2174606474816671
+      definition:
+        title: "CPU Utilization"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "cpu"
+                formula: "query2"
+            queries:
+              - query: "avg:aws.rds.cpuutilization{$env,$team} by {dbname}"
+                data_source: "metrics"
+                name: "query2"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers: []
+      layout:
+        "x": 0
+        "y": 8
+        "width": 6
+        "height": 3
+
+    - id: 2812461268834784
+      definition:
+        title: "CPU Percent"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "cpu_utilization"
+                formula: "query1"
+            queries:
+              - query: "avg:aws.rds.cpuutilization{team:asset-accounting,$env,$team} by {database_instance}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers:
+          - label: "60 < y < 80"
+            value: "60 < y < 80"
+            display_type: "warning dashed"
+          - label: "y > 80"
+            value: "y > 80"
+            display_type: "error dashed"
+      layout:
+        "x": 6
+        "y": 8
+        "width": 6
+        "height": 3
+
+    - id: 6116997982530718
+      definition:
+        title: "Freeable Memory"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "freeable_mem"
+                formula: "query2"
+            queries:
+              - query: "avg:aws.rds.freeable_memory{$env,$team}"
+                data_source: "metrics"
+                name: "query2"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers:
+          - label: "y < 1074000000"
+            value: "y < 1074000000"
+            display_type: "error dashed"
+          - label: "1074000000 < y < 2147000000"
+            value: "1074000000 < y < 2147000000"
+            display_type: "warning dashed"
+          - label: "y > 2147000000"
+            value: "y > 2147000000"
+            display_type: "ok dashed"
+      layout:
+        "x": 0
+        "y": 11
+        "width": 6
+        "height": 3
+
+    - id: 5234839535151199
+      definition:
+        title: "Read/Write IOPS (remove)"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "read_iops"
+                formula: "query2"
+              - alias: "write_iops"
+                formula: "query1"
+            queries:
+              - query: "avg:aws.rds.read_iops{$env,$team} by {database_instance}.as_count()"
+                data_source: "metrics"
+                name: "query2"
+              - query: "avg:aws.rds.write_iops{$env,$team} by {database_instance}.as_count()"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers: []
+      layout:
+        "x": 6
+        "y": 11
+        "width": 6
+        "height": 3
+
+    - id: 4860319630217495
+      definition:
+        type: "note"
+        content: "## Database Performance"
+        background_color: "pink"
+        font_size: "36"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 14
+        "width": 12
+        "height": 1
+
+    - id: 6695259498270306
+      definition:
+        title: "Deadlock"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "deadlocks"
+                formula: "query3"
+            queries:
+              - query: "sum:aws.rds.deadlocks{$env,$team} by {dbinstanceidentifier}.as_count()"
+                data_source: "metrics"
+                name: "query3"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers:
+          - value: "y < 0.03"
+            display_type: "ok dashed"
+          - value: "0.03 < y < 0.05"
+            display_type: "warning dashed"
+          - value: "y > 0.05"
+            display_type: "error dashed"
+      layout:
+        "x": 0
+        "y": 15
+        "width": 4
+        "height": 3
+
+    - id: 115866260173175
+      definition:
+        title: "Read Write Latency"
+        title_size: "13"
+        title_align: "center"
+        show_legend: false
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "write_latency"
+                formula: "query1"
+              - alias: "read_latency"
+                formula: "query2"
+            queries:
+              - query: "max:aws.rds.write_latency{$env AND $team AND (engine:aurora-mysql* OR engine:mysql)} by {dbclusteridentifier}"
+                data_source: "metrics"
+                name: "query1"
+              - query: "max:aws.rds.read_latency{$env AND $team AND (engine:aurora-mysql* OR engine:mysql)} by {dbclusteridentifier}"
+                data_source: "metrics"
+                name: "query2"
+            response_format: "timeseries"
+            style:
+              palette: "datadog16"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 4
+        "y": 15
+        "width": 4
+        "height": 3
+
+    - id: 3886743118943640
+      definition:
+        title: "DML Latency"
+        title_size: "13"
+        title_align: "left"
+        show_legend: false
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - query: "avg:aws.rds.dmllatency{$env AND $team AND (engine:aurora-mysql OR engine:mysql*)} by {dbclusteridentifier}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 8
+        "y": 15
+        "width": 4
+        "height": 3
+
+    - id: 6861942921496846
+      definition:
+        title: "Transaction"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "blocked_trans"
+                formula: "query2"
+            queries:
+              - query: "sum:aws.rds.active_transactions{$env,$team} by {dbinstanceidentifier}"
+                data_source: "metrics"
+                name: "query1"
+              - query: "sum:aws.rds.blocked_transactions{$env,$team} by {dbinstanceidentifier}.as_count()"
+                data_source: "metrics"
+                name: "query2"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 18
+        "width": 4
+        "height": 3
+
+    - id: 4128286626632114
+      definition:
+        title: "DB Load"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "avg:aws.rds.dbload{team:asset-accounting,$env,$team} by {dbinstanceidentifier}"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 4
+        "y": 18
+        "width": 4
+        "height": 3
+
+    - id: 605222785408793
+      definition:
+        title: "Commit Latency"
+        title_size: "13"
+        title_align: "center"
+        show_legend: false
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - query: "avg:aws.rds.commit_latency{$env AND $team AND (engine:aurora-mysql OR engine:mysql*)} by {dbclusteridentifier}"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 8
+        "y": 18
+        "width": 4
+        "height": 3
+
+    - id: 8255692740930744
+      definition:
+        title: "Network KiB/second"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "net_in"
+                formula: "query1"
+              - alias: "net_out"
+                formula: "query2"
+            queries:
+              - query: "avg:aws.rds.network_receive_throughput{$env,$team} by {database_instance}.as_rate()"
+                data_source: "metrics"
+                name: "query1"
+              - query: "avg:aws.rds.network_transmit_throughput{$env,$team} by {database_instance}.as_rate()"
+                data_source: "metrics"
+                name: "query2"
+            response_format: "timeseries"
+            style:
+              palette: "purple"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 0
+        "y": 21
+        "width": 4
+        "height": 3
+
+    - id: 5973574792490366
+      definition:
+        title: "SELECT Throughput"
+        title_size: "13"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "exclude_null(query1)"
+            queries:
+              - query: "avg:aws.rds.select_throughput{$env AND $team AND (engine:aurora-mysql* OR engine:mysql)} by {dbinstanceidentifier}.as_count()"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "blue"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 4
+        "y": 21
+        "width": 4
+        "height": 3
+
+    - id: 7370924641029278
+      definition:
+        title: "DML Throughput"
+        title_size: "13"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "horizontal"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "exclude_null(top10(query1))"
+            queries:
+              - query: "avg:aws.rds.dmlthroughput{$env AND $team AND (engine:aurora-mysql* OR engine:mysql)} by {dbinstanceidentifier}.as_count()"
+                data_source: "metrics"
+                name: "query1"
+            response_format: "timeseries"
+            style:
+              palette: "blue"
+            display_type: "line"
+        custom_links: []
+      layout:
+        "x": 8
+        "y": 21
+        "width": 4
+        "height": 3

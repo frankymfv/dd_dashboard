@@ -1,0 +1,59 @@
+id: 1482349411320340
+definition:
+  title: "ALB information"
+  type: "query_table"
+  requests:
+    - queries:
+        - name: "query6"
+          data_source: "metrics"
+          query: "sum:aws.applicationelb.request_count{$env,$team} by {env,team,project,targetgroup}.as_count()"
+          aggregator: "sum"
+        - name: "query2"
+          data_source: "metrics"
+          query: "sum:aws.applicationelb.request_count{$env,$team} by {env,team,project,targetgroup}.as_count()"
+          aggregator: "avg"
+        - name: "query5"
+          data_source: "metrics"
+          query: "avg:aws.applicationelb.target_response_time.p95{$env,$team} by {env,team,project,targetgroup}"
+          aggregator: "avg"
+        - name: "query1"
+          data_source: "metrics"
+          query: "sum:aws.applicationelb.httpcode_elb_5xx{$env,$team} by {env,team,project}.as_count()"
+          aggregator: "avg"
+        - name: "query3"
+          data_source: "metrics"
+          query: "sum:aws.applicationelb.httpcode_elb_5xx{$env,$team} by {env,team,project}.as_count()"
+          aggregator: "avg"
+        - name: "query4"
+          data_source: "metrics"
+          query: "sum:aws.applicationelb.request_count{$env,$team} by {env,team,project,targetgroup}.as_count()"
+          aggregator: "avg"
+      response_format: "scalar"
+      sort:
+        count: 500
+        order_by:
+          - type: "formula"
+            index: 3
+            order: "desc"
+      formulas:
+        - alias: "total request"
+          cell_display_mode: "number"
+          formula: "query6"
+        - alias: "RPS"
+          number_format:
+            unit:
+              unit_name: "request"
+              per_unit_name: "second"
+              type: "canonical_unit"
+          formula: "query2"
+        - alias: "response time p95"
+          cell_display_mode: "number"
+          formula: "query5"
+        - alias: "Error rate"
+          formula: "((query1 + query3) / query4) * 100"
+  has_search_bar: "auto"
+layout:
+  "x": 0
+  "y": 0
+  "width": 12
+  "height": 3

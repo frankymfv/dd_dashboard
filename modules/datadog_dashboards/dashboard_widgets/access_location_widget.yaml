@@ -1,0 +1,31 @@
+id: 4902892189720075
+definition:
+  title: "Access Location (move to overview)"
+  title_size: "16"
+  title_align: "left"
+  type: "geomap"
+  requests:
+    - queries:
+        - data_source: "metrics"
+          name: "query1"
+          query: "sum:cloudflare.requests.country{zone_name:fixed-assets.moneyforward.com} by {country}.as_count()"
+          aggregator: "avg"
+      response_format: "scalar"
+      formulas:
+        - formula: "query1"
+      sort:
+        count: 250
+        order_by:
+          - type: "formula"
+            index: 0
+            order: "desc"
+  style:
+    palette: "hostmap_blues"
+    palette_flip: false
+  view:
+    focus: "WORLD"
+layout:
+  "x": 0
+  "y": 7
+  "width": 4
+  "height": 3

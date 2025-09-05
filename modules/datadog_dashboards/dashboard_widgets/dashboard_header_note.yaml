@@ -1,0 +1,38 @@
+id: 3376420991401685
+definition:
+  type: "note"
+  content: |
+    ![alt text](https://dlaudio.fineshare.net/cover/song-ai/covers/mackenzie-border-collie.webp)
+
+    # 📊 System Monitoring Dashboard
+
+    **Environment:** **$env.value** | **Team:** **$team.value**
+
+    This comprehensive dashboard provides real-time visibility into your infrastructure, applications, and services. It consolidates critical metrics across multiple layers of your technology stack.
+
+    **📈 What You'll Find:**
+
+    - **System Health**: SLO tracking, availability metrics, and service status
+    - **Application Performance**: Response times, error rates, and throughput
+    - **Infrastructure**: Kubernetes resources, container health, and networking
+    - **Data Layer**: Database performance, cache metrics, and storage utilization
+    - **External Services**: Load balancer metrics and third-party 
+    
+    **Guidelines:**
+    - ✅ Check this dashboard first for any alerts or anomalies.
+    - 📞 Contact: #your_slack_team on Slack.
+  
+
+  background_color: "white"
+  font_size: "14"
+  text_align: "left"
+  vertical_align: "top"
+  show_tick: false
+  tick_pos: "50%"
+  tick_edge: "left"
+  has_padding: true
+layout:
+  "x": 0
+  "y": 0
+  "width": 4
+  "height": 7

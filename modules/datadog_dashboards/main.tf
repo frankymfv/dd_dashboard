@@ -30,7 +30,7 @@ locals {
           for widget_ref in dashboard_outline.widgets :
           merge(
             {
-              definition = local.widgets[replace(basename(widget_ref.widget_file), ".yaml", "")]
+              definition = local.widgets[replace(basename(widget_ref.widget_file), ".yaml", "")]["definition"]
             },
             {
               layout = widget_ref.layout
@@ -54,3 +54,11 @@ resource "datadog_dashboard_json" "dashboards" {
     )
   )
 }
+
+
+
+# Output dashboard_json to a file
+# resource "local_file" "dashboard_json_output_result" {
+#   filename = "${path.module}/dashboard_json_output_result.json"
+#   content  = jsonencode(local.dashboards)
+# }

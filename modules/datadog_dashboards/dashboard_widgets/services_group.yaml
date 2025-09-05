@@ -1,0 +1,448 @@
+definition:
+  title: "Services"
+  background_color: "vivid_blue"
+  show_title: true
+  type: "group"
+  layout_type: "ordered"
+  widgets:
+    - id: 1736323808171077
+      definition:
+        type: "note"
+        content: "## Health"
+        background_color: "blue"
+        font_size: "12"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: false
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: false
+      layout:
+        "x": 0
+        "y": 0
+        "width": 12
+        "height": 1
+
+    - id: 36727307199968
+      definition:
+        title: "Containers States"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "Running"
+                formula: "query1"
+              - alias: "Ready"
+                formula: "query2"
+              - alias: "Terminated"
+                formula: "query3"
+              - alias: "Waiting"
+                formula: "query4"
+              - alias: "relicas desired"
+                formula: "query5"
+            response_format: "timeseries"
+            queries:
+              - query: "sum:kubernetes_state.container.running{kube_namespace:$namespace.value, $service}"
+                data_source: "metrics"
+                name: "query1"
+              - query: "sum:kubernetes_state.container.ready{kube_namespace:$namespace.value, $service}"
+                data_source: "metrics"
+                name: "query2"
+              - query: "sum:kubernetes_state.container.terminated{kube_namespace:$namespace.value, $service}"
+                data_source: "metrics"
+                name: "query3"
+              - query: "sum:kubernetes_state.container.status_report.count.waiting{kube_namespace:$namespace.value, $service}"
+                data_source: "metrics"
+                name: "query4"
+              - query: "sum:kubernetes_state.deployment.replicas_desired{kube_namespace:$namespace.value, $service}"
+                data_source: "metrics"
+                name: "query5"
+            style:
+              palette: "blue"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        yaxis:
+          scale: "linear"
+          label: ""
+          include_zero: true
+          min: "auto"
+          max: "auto"
+        markers: []
+      layout:
+        "x": 0
+        "y": 1
+        "width": 6
+        "height": 3
+
+    - id: 4979242232295968
+      definition:
+        title: "Containers in CrashloopBackOff (by Pod)"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "vertical"
+        legend_columns:
+          - "avg"
+          - "max"
+          - "value"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "CrashloopBackOff"
+                formula: "query1"
+            response_format: "timeseries"
+            queries:
+              - query: "sum:kubernetes_state.container.status_report.count.waiting{kube_namespace:$namespace.value ,reason:crashloopbackoff} by {pod_name}"
+                data_source: "metrics"
+                name: "query1"
+            style:
+              palette: "blue"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "bars"
+        yaxis:
+          scale: "linear"
+          label: ""
+          include_zero: true
+          min: "auto"
+          max: "auto"
+        markers: []
+      layout:
+        "x": 6
+        "y": 1
+        "width": 6
+        "height": 3
+
+    - id: 3484404766143249
+      definition:
+        title: "Containers OOM Killed (by Pod)"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - query: "sum:kubernetes.containers.state.terminated{kube_namespace:$namespace.value ,reason:oomkilled} by {pod_name}"
+                data_source: "metrics"
+                name: "query1"
+            formulas:
+              - formula: "query1"
+            style:
+              palette: "blue"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "bars"
+        yaxis:
+          scale: "linear"
+          label: ""
+          include_zero: true
+          min: "auto"
+          max: "auto"
+        markers: []
+      layout:
+        "x": 0
+        "y": 4
+        "width": 6
+        "height": 3
+
+    - id: 106805208976973
+      definition:
+        title: "Dependency Map"
+        title_size: "16"
+        title_align: "left"
+        type: "topology_map"
+        requests:
+          - query:
+              data_source: "service_map"
+              filters:
+                - "$env"
+              service: "$service"
+              query_string: "service:($service.value)"
+            request_type: "topology"
+      layout:
+        "x": 6
+        "y": 4
+        "width": 6
+        "height": 3
+
+    - id: 7074867250317244
+      definition:
+        type: "note"
+        content: "## Resource Utilization"
+        background_color: "purple"
+        font_size: "14"
+        text_align: "center"
+        vertical_align: "center"
+        show_tick: true
+        tick_pos: "50%"
+        tick_edge: "left"
+        has_padding: true
+      layout:
+        "x": 0
+        "y": 7
+        "width": 12
+        "height": 1
+
+    - id: 6010109138290147
+      definition:
+        title: "CPU percentage"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - response_format: "timeseries"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "avg:kubernetes.cpu.usage.total{kube_namespace:$namespace.value, $service} by {pod_name}"
+              - name: "query2"
+                data_source: "metrics"
+                query: "avg:kubernetes.cpu.requests{kube_namespace:$namespace.value, $service} by {pod_name}"
+            formulas:
+              - alias: "percentage"
+                formula: "query1 / (query2 * 1000000000) * 100"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+      layout:
+        "x": 0
+        "y": 8
+        "width": 4
+        "height": 3
+
+    - id: 6981182833900402
+      definition:
+        title: "Memory Percent"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "avg:kubernetes.memory.usage_pct{kube_namespace:$namespace.value, $service} by {pod_name}"
+            response_format: "timeseries"
+            style:
+              palette: "purple"
+              order_by: "values"
+              color_order: "shuffled"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers: []
+      layout:
+        "x": 4
+        "y": 8
+        "width": 4
+        "height": 3
+
+    - id: 5454379352059804
+      definition:
+        title: "Network Receive and Transmit"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "receive"
+                formula: "query1"
+              - alias: "transmit"
+                formula: "query2"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "sum:kubernetes.network.rx_bytes{$env, $service}"
+              - name: "query2"
+                data_source: "metrics"
+                query: "sum:kubernetes.network.tx_bytes{$env, $service}"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              color_order: "shuffled"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers: []
+      layout:
+        "x": 8
+        "y": 8
+        "width": 4
+        "height": 3
+
+    - id: 6780386267187339
+      definition:
+        title: "Pods Restart"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - formula: "query1"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "sum:kubernetes.containers.restarts{$env,kube_namespace:$namespace.value, $service} by {kube_container_name}"
+            response_format: "timeseries"
+            style:
+              palette: "purple"
+              order_by: "values"
+              color_order: "shuffled"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "bars"
+        markers:
+          - label: "y > 2"
+            value: "y > 2"
+            display_type: "error dashed"
+          - label: "y < 2"
+            value: "y < 2"
+            display_type: "ok dashed"
+      layout:
+        "x": 0
+        "y": 11
+        "width": 4
+        "height": 3
+
+    - id: 4598056564169505
+      definition:
+        title: "Network Errors by Pod"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "vertical"
+        legend_columns:
+          - "max"
+          - "value"
+          - "avg"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "Received Errors"
+                formula: "query1"
+              - alias: "Transmitted Errors"
+                formula: "query2"
+            response_format: "timeseries"
+            queries:
+              - query: "sum:kubernetes.network.rx_errors{kube_namespace:$namespace.value, $service} by {pod_name}"
+                data_source: "metrics"
+                name: "query1"
+              - query: "sum:kubernetes.network.tx_errors{kube_namespace:$namespace.value, $service} by {pod_name}"
+                data_source: "metrics"
+                name: "query2"
+            style:
+              palette: "purple"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        yaxis:
+          scale: "linear"
+          label: ""
+          include_zero: true
+          min: "auto"
+          max: "auto"
+        markers: []
+      layout:
+        "x": 4
+        "y": 11
+        "width": 4
+        "height": 3
+
+    - id: 5871113813390191
+      definition:
+        title: "Disk IO Read/Write"
+        title_size: "16"
+        title_align: "left"
+        show_legend: true
+        legend_layout: "auto"
+        legend_columns:
+          - "avg"
+          - "min"
+          - "max"
+          - "value"
+          - "sum"
+        type: "timeseries"
+        requests:
+          - formulas:
+              - alias: "cpu_usage"
+                style:
+                  palette: "dog_classic"
+                formula: "query1"
+              - alias: "cpu_request"
+                formula: "query2"
+            queries:
+              - name: "query1"
+                data_source: "metrics"
+                query: "avg:kubernetes.io.read_bytes{kube_namespace:*asset-accounting*,container_name:aa-backend,$env} by {display_container_name}"
+              - name: "query2"
+                data_source: "metrics"
+                query: "avg:kubernetes.io.write_bytes{kube_namespace:*asset-accounting*,container_name:aa-backend,$env} by {display_container_name}"
+            response_format: "timeseries"
+            style:
+              palette: "dog_classic"
+              order_by: "values"
+              color_order: "shuffled"
+              line_type: "solid"
+              line_width: "normal"
+            display_type: "line"
+        markers: []
+      layout:
+        "x": 8
+        "y": 11
+        "width": 4
+        "height": 3

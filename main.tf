@@ -40,7 +40,7 @@ output "dashboard_names" {
   value       = keys(module.datadog_dashboards.dashboard_titles)
 }
 
-output "dashboard_json" {
-  description = "Dashboard JSON configurations"
-  value       = module.datadog_dashboards.dashboard_json
-}
+# output "dashboard_json_output_result" {
+#   description = "Dashboard JSON configurations"
+#   value       = module.datadog_dashboards.dashboard_json
+# }
