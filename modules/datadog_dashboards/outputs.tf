@@ -16,9 +16,3 @@ output "dashboard_json" {
   description = "The dashboard JSON configurations after merging with prefix"
   value = local.dashboards
 }
-
-# resource "local_file" "yaml_to_json" {
-#   filename = "${path.module}/dashboard.json"
-#   content  = local.dashboards
-# }
-

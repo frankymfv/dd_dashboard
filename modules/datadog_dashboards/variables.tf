@@ -74,8 +74,6 @@ variable "template_variables" {
 variable "enabled_widgets" {
   description = "Configuration to enable/disable individual widget groups"
   type = object({
-    dashboard_header = optional(bool, true)
-    overview_group = optional(bool, true)
     access_location = optional(bool, true)
     alb_information = optional(bool, true)
     cpu_mem_kubernetes = optional(bool, true)
@@ -86,8 +84,6 @@ variable "enabled_widgets" {
     s3_group = optional(bool, true)
   })
   default = {
-    dashboard_header = true
-    overview_group = true
     access_location = true
     alb_information = true
     cpu_mem_kubernetes = true

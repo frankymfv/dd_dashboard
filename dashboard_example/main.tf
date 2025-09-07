@@ -9,7 +9,7 @@ provider "datadog" {
 
 
 module "datadog_dashboards" {
-  source = "./modules/datadog_dashboards"
+  source = "git::https://github.com/frankymfv/dd_dashboard.git//modules/datadog_dashboards"
   
   # Dashboard customization
   dashboard_title     = "[Franky][PROD] SLO Standard System Dashboard"

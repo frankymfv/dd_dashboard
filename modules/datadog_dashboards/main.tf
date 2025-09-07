@@ -1,9 +1,9 @@
 locals {
-  dashboard_path = "${path.module}/dashboard"
+  dashboard_layout_path = "${path.module}/dashboard_layout"
   widgets_path   = "${path.module}/dashboard_widgets"
   
   # Load dashboard outline files
-  dashboard_files = fileset(local.dashboard_path, "*.yaml")
+  dashboard_files = fileset(local.dashboard_layout_path, "*.yaml")
   
   # Load all widget files
   widget_files = fileset(local.widgets_path, "*.yaml")
@@ -12,7 +12,7 @@ locals {
   dashboard_outlines = {
     for f in local.dashboard_files :
     replace(basename(f), ".yaml", "") => yamldecode(
-      templatefile("${local.dashboard_path}/${f}", {
+      templatefile("${local.dashboard_layout_path}/${f}", {
         dashboard_title   = var.dashboard_title
         env_values        = var.template_variables.env.available_values
         default_env       = var.template_variables.env.default
@@ -44,8 +44,8 @@ locals {
   
   # Widget enable/disable mapping
   widget_enabled_map = {
-    "dashboard_header_note" = var.enabled_widgets.dashboard_header
-    "overview_group" = var.enabled_widgets.overview_group
+    "dashboard_header_note" = true
+    "overview_group" = true
     "access_location_widget" = var.enabled_widgets.access_location
     "alb_information_widget" = var.enabled_widgets.alb_information
     "cpu_mem_kubernetes_widget" = var.enabled_widgets.cpu_mem_kubernetes
@@ -95,11 +95,3 @@ resource "datadog_dashboard_json" "dashboards" {
 
   dashboard = jsonencode(each.value)
 }
-
-
-
-# Output dashboard_json to a file
-# resource "local_file" "dashboard_json_output_result" {
-#   filename = "${path.module}/dashboard_json_output_result.json"
-#   content  = jsonencode(local.dashboards)
-# }

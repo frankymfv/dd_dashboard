@@ -9,7 +9,6 @@ required_providers {
  cloud { 
     
     organization = "FrankyTesting" 
-
     workspaces { 
       name = "dd_test_222" 
     } 
