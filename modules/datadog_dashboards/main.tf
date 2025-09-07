@@ -94,4 +94,13 @@ resource "datadog_dashboard_json" "dashboards" {
   for_each = local.dashboards
 
   dashboard = jsonencode(each.value)
+
+  # Ignore changes to dashboard content after initial creation
+  # This allows users to modify dashboards in the Datadog UI without Terraform conflicts
+  # This is essential for template initialization workflows where dashboards are managed via UI
+  lifecycle {
+    ignore_changes = [
+      dashboard
+    ]
+  }
 }

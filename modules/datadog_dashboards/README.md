@@ -6,18 +6,27 @@
 
 A Terraform module that creates comprehensive Datadog dashboards with modular widget components, SLO monitoring, and customizable template variables for filtering and organization.
 
+> **⚠️ Template Initialization Only**: This module is designed for initial template setup. After initial deployment, all updates and modifications should be handled directly in the Datadog UI. The module includes built-in `ignore_changes` lifecycle rule to prevent Terraform conflicts when you modify dashboards in the UI.
+
 ## Features
 
+- **Template Initialization**: Designed for one-time dashboard template setup
 - **Modular Dashboard Architecture**: Create dashboards using reusable widget components
 - **SLO Integration**: Built-in support for Service Level Objective monitoring
 - **Template Variables**: Configurable filtering by environment, team, namespace, and service
 - **Widget Toggle Control**: Enable/disable specific widget groups based on your needs
 - **YAML-based Configuration**: Easy-to-maintain dashboard layouts and widget definitions
 - **Multi-Environment Support**: Flexible configuration for different environments
+- **Post-Deployment Independence**: Once deployed, dashboards are managed via Datadog UI
 
 ## Usage
 
-### Basic Example
+> **Important**: This module is intended for **template initialization only**. After the initial deployment:
+> 1. **Safe UI Management**: Modify dashboards freely in the Datadog UI - the module includes `ignore_changes` to prevent conflicts
+> 2. **Optional**: Remove the module from your Terraform configuration or keep it for reference
+> 3. **Optional**: Import the created dashboards into your state if you need Terraform management
+
+### Template Initialization Example
 
 ```hcl
 module "datadog_dashboards" {
@@ -37,26 +46,26 @@ module "datadog_dashboards" {
   # Template variables for filtering
   template_variables = {
     env = {
-      available_values = ["prod", "stg", "dev"]
+      available_values = ["prod", "stg"]
       default         = "prod"
     }
     team = {
-      available_values = ["platform", "data-team", "frontend"]
-      default         = "platform"
+      available_values = []
+      default         = "asset-accounting"
     }
     namespace = {
-      available_values = ["prod-platform", "stg-platform"]
-      default         = "prod-platform"
+      available_values = []
+      default         = "prod-asset-accounting"
     }
     service = {
-      available_values = ["api-service", "web-service", "worker-service"]
-      default = "api-service"
+      available_values = []
+      default = "asset-accounting-backend"
     }
   }
 }
 ```
 
-### Advanced Example with Widget Control
+### Advanced Template Example with Widget Control
 
 ```hcl
 module "datadog_dashboards" {
@@ -77,27 +86,21 @@ module "datadog_dashboards" {
       default         = "prod"
     }
     team = {
-      available_values = ["asset-accounting", "platform"]
+      available_values = []
       default         = "asset-accounting"
     }
     namespace = {
-      available_values = ["prod-asset-accounting", "stg-asset-accounting"]
+      available_values = []
       default         = "prod-asset-accounting"
     }
     service = {
-      available_values = [
-        "asset-accounting-backend",
-        "asset-accounting-core",
-        "asset-accounting-admin-web"
-      ]
+      available_values = []
       default = "asset-accounting-backend"
     }
   }
   
   # Enable/disable specific widget groups
   enabled_widgets = {
-    dashboard_header = true
-    overview_group = true
     access_location = false
     alb_information = true
     cpu_mem_kubernetes = true
@@ -167,20 +170,20 @@ slo_ids = {
 ```hcl
 template_variables = {
   env = {
-    available_values = ["prod", "stg", "dev"]
+    available_values = ["prod", "stg"]
     default         = "prod"
   }
   team = {
-    available_values = ["team1", "team2"]
-    default         = "team1"
+    available_values = []  # Empty by default, populate with your values
+    default         = "asset-accounting"
   }
   namespace = {
-    available_values = ["namespace1", "namespace2"]
-    default         = "namespace1"
+    available_values = []  # Empty by default, populate with your values
+    default         = "prod-asset-accounting"
   }
   service = {
-    available_values = ["service1", "service2"]
-    default = "service1"
+    available_values = []  # Empty by default, populate with your values
+    default = "asset-accounting-backend"
   }
 }
 ```
@@ -189,8 +192,6 @@ template_variables = {
 
 ```hcl
 enabled_widgets = {
-  dashboard_header = bool      # Dashboard header with team info
-  overview_group = bool        # System overview metrics
   access_location = bool       # Geographic access patterns
   alb_information = bool       # Load balancer metrics
   cpu_mem_kubernetes = bool    # Kubernetes resource metrics
@@ -202,21 +203,26 @@ enabled_widgets = {
 }
 ```
 
+**Note**: `dashboard_header` and `overview_group` are always enabled and cannot be disabled through the `enabled_widgets` configuration.
+
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| dashboard_jsons | The dashboard JSON configurations after merging with prefix |
 | dashboard_titles | The dashboard titles after applying prefix |
-| dashboard_json | The dashboard JSON configurations after merging with prefix |
+| dashboard_ids | The Datadog dashboard IDs for each created dashboard |
+| dashboard_urls | The Datadog dashboard URLs for each created dashboard |
+| widget_counts | The number of widgets in each dashboard |
+| enabled_widgets_status | Shows which widgets are enabled/disabled in the current configuration |
+| template_variables | The template variables configuration used for dashboard filtering |
 
 ## Examples
 
 See the [examples](./examples) directory for complete working examples:
 
-- [Basic Dashboard](./examples/basic-dashboard)
-- [Custom Widget Configuration](./examples/custom-widgets)
-- [Multi-Environment Setup](./examples/multi-environment)
+- [Template Initialization](./examples/template-initialization) - **Recommended for first-time setup**
+
+This example demonstrates how to use the module for initial dashboard template creation and provides comprehensive outputs for post-deployment management.
 
 ## Widget Customization
 
@@ -247,21 +253,34 @@ Widgets can use the following template variables:
 - Datadog API and App keys
 - Go 1.19+ (for testing)
 
-### Testing
+### Template Initialization Workflow
 
 ```bash
-# Initialize Terraform
+# 1. Initialize Terraform
 terraform init
 
-# Plan the deployment
+# 2. Plan the template deployment
 terraform plan
 
-# Apply the configuration
+# 3. Apply the template (one-time setup)
 terraform apply
 
-# Destroy resources
+# 4. After successful deployment, remove the module from your configuration
+# 5. Import dashboards to state if needed for future management
+terraform import datadog_dashboard_json.dashboards["dashboard_name"] <dashboard_id>
+
+# 6. Destroy the module resources (optional, if you want to manage via UI)
 terraform destroy
 ```
+
+### Post-Deployment Management
+
+After the initial template deployment:
+
+1. **Remove the module** from your Terraform configuration
+2. **Import dashboards** to your state if you need Terraform management
+3. **Use Datadog UI** for all future modifications to avoid conflicts
+4. **Document changes** in your team's dashboard management process
 
 ### Contributing
 
