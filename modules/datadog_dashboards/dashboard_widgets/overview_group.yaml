@@ -54,7 +54,7 @@ definition:
         requests:
           - request_type: "slo_list"
             query:
-              query_string: "$team"
+              query_string: "$env $team"
               limit: 100
               rollup:
                 type: "month"

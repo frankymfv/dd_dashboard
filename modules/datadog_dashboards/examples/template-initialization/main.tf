@@ -87,6 +87,13 @@ output "dashboard_urls" {
   value       = module.datadog_dashboard_templates.dashboard_urls
 }
 
+output "dashboard_urls_full" {
+  description = "Complete URLs ready to copy and paste into browser"
+  value = {
+    for k, v in module.datadog_dashboard_templates.dashboard_urls : k => "https://app.datadoghq.com${v}"
+  }
+}
+
 output "widget_counts" {
   description = "Number of widgets in each dashboard"
   value       = module.datadog_dashboard_templates.widget_counts
@@ -105,22 +112,39 @@ output "template_variables" {
 output "post_deployment_instructions" {
   description = "Instructions for post-deployment management"
   value = <<-EOT
-    Template initialization complete! Next steps:
-    
-    1. ✅ SAFE: You can now modify dashboards in the Datadog UI without conflicts
-    2. ✅ The module includes lifecycle ignore_changes to prevent Terraform from reverting UI modifications
-    3. Optional: Keep this module in Terraform for reference or remove it after initial setup
-    4. Optional: Import dashboards to state if you need Terraform management:
-       terraform import datadog_dashboard_json.dashboards["dashboard_name"] <dashboard_id>
-    5. Document your dashboard management process
-    
-    Dashboard Summary:
-    ${join("\n", [for k, v in module.datadog_dashboard_templates.dashboard_ids : "${k}: ID=${v}, URL=${module.datadog_dashboard_templates.dashboard_urls[k]}, Widgets=${module.datadog_dashboard_templates.widget_counts[k]}"])}
-    
-    Enabled Widgets:
-    ${join("\n", [for widget, enabled in module.datadog_dashboard_templates.enabled_widgets_status : "${widget}: ${enabled}"])}
-    
-    ✅ CONFLICT-FREE: The module automatically ignores changes made in the Datadog UI.
-    You can customize dashboards freely without Terraform interference.
+🚀 DATADOG DASHBOARD TEMPLATE DEPLOYMENT COMPLETE!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 DASHBOARD SUMMARY
+───────────────────────────────────────────────────────────────────────────────
+${join("\n", [for k, v in module.datadog_dashboard_templates.dashboard_ids : "📈 ${k}\n   🆔 ID: ${v}\n   🔗 URL: https://app.datadoghq.com${module.datadog_dashboard_templates.dashboard_urls[k]}\n   📊 Widgets: ${module.datadog_dashboard_templates.widget_counts[k]}\n   ───────────────────────────────────────────────────────────────────────────────"])}
+
+🎛️  ENABLED WIDGETS
+───────────────────────────────────────────────────────────────────────────────
+${join("\n", [for widget, enabled in module.datadog_dashboard_templates.enabled_widgets_status : "   ${enabled ? "✅" : "❌"} ${replace(widget, "_", " ")}"])}
+
+🔗 QUICK ACCESS LINKS (Copy & Paste Ready)
+───────────────────────────────────────────────────────────────────────────────
+${join("\n", [for k, v in module.datadog_dashboard_templates.dashboard_urls : "   📊 ${k}: https://app.datadoghq.com${v}"])}
+
+📋 NEXT STEPS
+───────────────────────────────────────────────────────────────────────────────
+   1. ✅ SAFE: You can now modify dashboards in the Datadog UI without conflicts
+   2. ✅ The module includes lifecycle ignore_changes to prevent Terraform from reverting UI modifications
+   3. 🔗 Copy the URLs above and paste them into your browser for quick access
+   4. 📝 Optional: Keep this module in Terraform for reference or remove it after initial setup
+   5. 🔄 Optional: Import dashboards to state if you need Terraform management:
+      terraform import datadog_dashboard_json.dashboards["dashboard_name"] <dashboard_id>
+   6. 📚 Document your dashboard management process
+
+💡 PRO TIP
+───────────────────────────────────────────────────────────────────────────────
+   ✅ CONFLICT-FREE: The module automatically ignores changes made in the Datadog UI.
+   You can customize dashboards freely without Terraform interference.
+
+   🔗 All URLs above are ready to copy and paste into your browser!
+═══════════════════════════════════════════════════════════════════════════════
   EOT
 }
+
