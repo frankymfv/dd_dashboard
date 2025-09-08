@@ -110,7 +110,7 @@ definition:
 
     - id: 6913547300658672
       definition:
-        title: "Event (consider remove)"
+        title: "Event"
         title_size: "16"
         title_align: "left"
         requests:
@@ -267,7 +267,7 @@ definition:
 
     - id: 5234839535151199
       definition:
-        title: "Read/Write IOPS (remove)"
+        title: "Read/Write IOPS"
         title_size: "16"
         title_align: "left"
         show_legend: true

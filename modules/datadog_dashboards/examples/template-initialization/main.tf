@@ -25,13 +25,13 @@ module "datadog_dashboard_templates" {
 
   # Basic configuration - customize as needed
   dashboard_title     = "[PROD] System Dashboard Template"
-  dashboard_image_url = "https://your-company.com/dashboard-image.png"
-  slack_team          = "your-team"
+  dashboard_image_url = "https://dlaudio.fineshare.net/cover/song-ai/covers/mackenzie-border-collie.webp"
+  slack_team          = "Slack_Channel_Test"
 
   # SLO IDs - update with your actual SLO IDs
   slo_ids = {
-    request_latency = "your-request-latency-slo-id"
-    availability_api = "your-availability-api-slo-id"
+    request_latency = "55851b7bf8d15e6597a0b55aa15ceadc" # Request latency SLO ID
+    availability_api = "b8c13e6ff68e500eb487c3aac7eaaa8a"
   }
 
   # Template variables - customize for your environment
