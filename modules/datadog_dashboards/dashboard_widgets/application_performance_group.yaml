@@ -334,30 +334,27 @@ definition:
 
     - id: 165366499120846
       definition:
-        title: "Request count"
-        type: "query_table"
+        title: Request count
+        type: timeseries
         requests:
-          - queries:
-              - name: "query2"
-                data_source: "metrics"
-                query: "avg:aws.applicationelb.request_count{$env,$team} by {loadbalancer,targetgroup}.as_count()"
-                aggregator: "avg"
-            response_format: "scalar"
-            sort:
-              count: 500
-              order_by:
-                - type: "formula"
-                  index: 0
-                  order: "desc"
-            formulas:
-              - formula: "query2"
-                cell_display_mode: "bar"
-                number_format:
+          - formulas:
+              - number_format:
                   unit:
-                    unit_name: "request"
-                    per_unit_name: "second"
-                    type: "canonical_unit"
-        has_search_bar: "auto"
+                    per_unit_name: second
+                    type: canonical_unit
+                    unit_name: request
+                formula: query2
+            queries:
+              - data_source: metrics
+                name: query2
+                query: avg:aws.applicationelb.request_count{$env,$team} by {loadbalancer}.as_count()
+            response_format: timeseries
+            style:
+              palette: dog_classic
+              order_by: values
+              line_type: solid
+              line_width: normal
+            display_type: line
       layout:
         "x": 6
         "y": 14
